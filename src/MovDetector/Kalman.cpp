@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <memory.h>
 
-CKalman::CKalman()
+CKalman_mv::CKalman_mv()
 {
 	state_pre = NULL;
 	state_post = NULL;
@@ -36,13 +36,13 @@ CKalman::CKalman()
 	m_bInited = FALSE;
 }
 
-CKalman::~CKalman()
+CKalman_mv::~CKalman_mv()
 {
 	KalmanClose();
 	m_bInited = FALSE;
 }
 
-int CKalman::KalmanOpen(int D, int M, int C )
+int CKalman_mv::KalmanOpen(int D, int M, int C )
 {
 	if( D <= 0 || M <= 0 ){
 		//AfxMessageBox("state and measurement vectors must have positive number of dimensions! ");	
@@ -159,7 +159,7 @@ int CKalman::KalmanOpen(int D, int M, int C )
 	return 0;
 }
 
-void CKalman::KalmanClose()
+void CKalman_mv::KalmanClose()
 {
 	if(state_pre != NULL){
 		delete [] state_pre ;        state_pre = NULL;
@@ -238,7 +238,7 @@ void CKalman::KalmanClose()
 }
 
 #if 0
-void CKalman::KalmanInitParam(int x_centre, int y_centre, double DeltaT)
+void CKalman_mv::KalmanInitParam(int x_centre, int y_centre, double DeltaT)
 {
 	if (!m_bInited){
 		return;
@@ -309,7 +309,7 @@ void CKalman::KalmanInitParam(int x_centre, int y_centre, double DeltaT)
 
 #else
 
-void CKalman::KalmanInitParam(int x_centre, int y_centre, double DeltaT)
+void CKalman_mv::KalmanInitParam(int x_centre, int y_centre, double DeltaT)
 {
 	if (!m_bInited){
 		return;
@@ -381,7 +381,7 @@ void CKalman::KalmanInitParam(int x_centre, int y_centre, double DeltaT)
 }
 #endif
 
-void CKalman::KalmanPredict( double * control )//control-->u(k)
+void CKalman_mv::KalmanPredict( double * control )//control-->u(k)
 {
 	if (!m_bInited){
 		return;
@@ -406,7 +406,7 @@ void CKalman::KalmanPredict( double * control )//control-->u(k)
 	MatrixAddition(APA_T, process_noise_cov, DP, DP, error_cov_pre);
 }
 	
-void CKalman::KalmanCorrect( double * measurement )
+void CKalman_mv::KalmanCorrect( double * measurement )
 {
 	if (!m_bInited){
 		return;
@@ -453,7 +453,7 @@ void CKalman::KalmanCorrect( double * measurement )
 	MatrixSubtraction( error_cov_pre , Kk_H_Pk , DP ,DP , error_cov_post);
 }
 
-void CKalman::MatrixMultiply(double* A, double* B, int m, int p, int n, double* C)
+void CKalman_mv::MatrixMultiply(double* A, double* B, int m, int p, int n, double* C)
 {
 	// A = input matrix (m x p)
 	// B = input matrix (p x n)
@@ -475,7 +475,7 @@ void CKalman::MatrixMultiply(double* A, double* B, int m, int p, int n, double* 
 	}
 }
 
-void CKalman::MatrixAddition(double* A, double* B, int m, int n, double* C)
+void CKalman_mv::MatrixAddition(double* A, double* B, int m, int n, double* C)
 {
 	// A = input matrix (m x n)
 	// B = input matrix (m x n)
@@ -492,7 +492,7 @@ void CKalman::MatrixAddition(double* A, double* B, int m, int n, double* C)
 	}
 }
 
-void CKalman::MatrixSubtraction(double* A, double* B, int m, int n, double* C)
+void CKalman_mv::MatrixSubtraction(double* A, double* B, int m, int n, double* C)
 {
 	// A = input matrix (m x n)
 	// B = input matrix (m x n)
@@ -509,7 +509,7 @@ void CKalman::MatrixSubtraction(double* A, double* B, int m, int n, double* C)
 	}
 }
 
-void CKalman::MatrixTranspose(double* A, int m, int n, double* C)
+void CKalman_mv::MatrixTranspose(double* A, int m, int n, double* C)
 {
 	// A = input matrix (m x n)
 	// m = number of rows in A
@@ -525,7 +525,7 @@ void CKalman::MatrixTranspose(double* A, int m, int n, double* C)
 	}
 }
 
-int CKalman::MatrixInversion(double* A, int n, double* AInverse)
+int CKalman_mv::MatrixInversion(double* A, int n, double* AInverse)
 {
 	// A = input matrix (n x n)
 	// n = dimension of A 
@@ -617,7 +617,7 @@ int CKalman::MatrixInversion(double* A, int n, double* AInverse)
 	返回值：
 	如果返回标记为0，表示矩阵奇异；否则返回非0值
 */
-int CKalman::MatrixBrinv( double * A, int n)
+int CKalman_mv::MatrixBrinv( double * A, int n)
 {
 	int * is, * js, i, j, k, l, u, v;
 	double d,p;
@@ -724,7 +724,7 @@ int CKalman::MatrixBrinv( double * A, int n)
 	return(1);
 }
 
-void CKalman::MatrixCopy(double *A, double *B, int m, int n)
+void CKalman_mv::MatrixCopy(double *A, double *B, int m, int n)
 {
 	memcpy(A, B, sizeof(double)*m*n);
 }

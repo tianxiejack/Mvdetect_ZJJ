@@ -7,7 +7,7 @@
 using namespace cv;
 using namespace std;
 
-CMoveDetector::CMoveDetector()
+CMoveDetector_mv::CMoveDetector_mv()
 {
 	int	i;
 	m_bExit	 = FALSE;
@@ -27,12 +27,12 @@ CMoveDetector::CMoveDetector()
 	m_context = NULL;
 }
 
-CMoveDetector::~CMoveDetector()
+CMoveDetector_mv::~CMoveDetector_mv()
 {
 	destroy();
 }
 
-int CMoveDetector::init(LPNOTIFYFUNC	notifyFunc, void *context)
+int CMoveDetector_mv::init(LPNOTIFYFUNC	notifyFunc, void *context)
 {
 	int	i, result = OSA_SOK;
 	initModule_video();
@@ -58,7 +58,7 @@ int CMoveDetector::init(LPNOTIFYFUNC	notifyFunc, void *context)
 	return	result;
 }
 
-int CMoveDetector::destroy()
+int CMoveDetector_mv::destroy()
 {
 	int	i,	rtn = OSA_SOK;
 	m_bExit = TRUE;
@@ -84,7 +84,7 @@ int CMoveDetector::destroy()
 	return rtn;
 }
 
-void	CMoveDetector::setFrame(cv::Mat	src, int chId /*= 0*/)
+void	CMoveDetector_mv::setFrame(cv::Mat	src, int chId /*= 0*/)
 {
 	CV_Assert(chId	< DETECTOR_NUM);
 	if( !src.empty() ){
@@ -95,13 +95,13 @@ void	CMoveDetector::setFrame(cv::Mat	src, int chId /*= 0*/)
 	}
 }
 
-//void	CMoveDetector::setDetectRoi(cv::Rect roi, int chId/* = 0*/)
+//void	CMoveDetector_mv::setDetectRoi(cv::Rect roi, int chId/* = 0*/)
 //{
 //	m_detectRoi[chId] = roi;
 //}
 
 
-void	CMoveDetector::setWarningRoi(std::vector<cv::Point2i>	warnRoi,	int chId	/*= 0*/)
+void	CMoveDetector_mv::setWarningRoi(std::vector<cv::Point2i>	warnRoi,	int chId	/*= 0*/)
 {
 	CV_Assert(chId	< DETECTOR_NUM);
 	int	k,	npoint	= warnRoi.size();
@@ -117,37 +117,37 @@ void	CMoveDetector::setWarningRoi(std::vector<cv::Point2i>	warnRoi,	int chId	/*=
 	}
 }
 
-void	CMoveDetector::clearWarningRoi(int chId	/*= 0*/)
+void	CMoveDetector_mv::clearWarningRoi(int chId	/*= 0*/)
 {
 	CV_Assert(chId	< DETECTOR_NUM);
 	m_warnRoiVec[chId].clear();
 }
 
-void	CMoveDetector::setTrkThred(TRK_THRED	trkThred,	int chId/*	= 0*/)
+void	CMoveDetector_mv::setTrkThred(TRK_THRED	trkThred,	int chId/*	= 0*/)
 {
 	CV_Assert(chId	< DETECTOR_NUM);
 	m_postDetect[chId].setTrkThred(trkThred);
 }
 
-void	CMoveDetector::setDrawOSD(cv::Mat	dispOSD, int chId /*= 0*/)
+void	CMoveDetector_mv::setDrawOSD(cv::Mat	dispOSD, int chId /*= 0*/)
 {
 	CV_Assert(chId	< DETECTOR_NUM);
 	disframe[chId]	= dispOSD;
 }
 
-void	CMoveDetector::setWarnMode(WARN_MODE	warnMode,	int chId /*= 0*/)
+void	CMoveDetector_mv::setWarnMode(WARN_MODE	warnMode,	int chId /*= 0*/)
 {
 	CV_Assert(chId	< DETECTOR_NUM);
 	m_warnMode[chId]	= warnMode;
 }
 
-void	CMoveDetector::enableSelfDraw(bool	bEnable, int chId/* = 0*/)
+void	CMoveDetector_mv::enableSelfDraw(bool	bEnable, int chId/* = 0*/)
 {
 	CV_Assert(chId	< DETECTOR_NUM);
 	m_bSelfDraw[chId] = bEnable;
 }
 
-void   CMoveDetector::setROIScalXY(float scaleX /*= 1.0*/, float scaleY /*= 1.0*/, int chId /*= 0*/)
+void   CMoveDetector_mv::setROIScalXY(float scaleX /*= 1.0*/, float scaleY /*= 1.0*/, int chId /*= 0*/)
 {
 	CV_Assert(chId	< DETECTOR_NUM);
 	m_scaleX[chId] = scaleX;
@@ -166,37 +166,37 @@ static void _copyTarget(std::vector<TRK_RECT_INFO> srcTarget, std::vector<TRK_RE
 	}
 }
 
-void	CMoveDetector::getLostTarget(std::vector<TRK_RECT_INFO>	&resTarget,	int chId /*= 0*/)
+void	CMoveDetector_mv::getLostTarget(std::vector<TRK_RECT_INFO>	&resTarget,	int chId /*= 0*/)
 {
 	CV_Assert(chId	<DETECTOR_NUM);
 	_copyTarget(m_warnLostTarget[chId], resTarget);
 }
 
-void	CMoveDetector::getInvadeTarget(std::vector<TRK_RECT_INFO>	&resTarget,	int chId /*= 0*/)
+void	CMoveDetector_mv::getInvadeTarget(std::vector<TRK_RECT_INFO>	&resTarget,	int chId /*= 0*/)
 {
 	CV_Assert(chId	<DETECTOR_NUM);
 	_copyTarget(m_warnInvadeTarget[chId], resTarget);
 }
 
-void	CMoveDetector::getMoveTarget(std::vector<TRK_RECT_INFO>	&resTarget,	int chId /*= 0*/)
+void	CMoveDetector_mv::getMoveTarget(std::vector<TRK_RECT_INFO>	&resTarget,	int chId /*= 0*/)
 {
 	CV_Assert(chId	<DETECTOR_NUM);
 	_copyTarget(m_movTarget[chId], resTarget);
 }
 
-void	CMoveDetector::getBoundTarget(std::vector<TRK_RECT_INFO>	&resTarget,	int chId /*= 0*/)
+void	CMoveDetector_mv::getBoundTarget(std::vector<TRK_RECT_INFO>	&resTarget,	int chId /*= 0*/)
 {
 	CV_Assert(chId	<DETECTOR_NUM);
 	_copyTarget(m_edgeTarget[chId], resTarget);
 }
 
-void	CMoveDetector::getWarnTarget(std::vector<TRK_RECT_INFO>	&resTarget,	int chId	/*= 0*/)
+void	CMoveDetector_mv::getWarnTarget(std::vector<TRK_RECT_INFO>	&resTarget,	int chId	/*= 0*/)
 {
 	CV_Assert(chId	<DETECTOR_NUM);
 		_copyTarget(m_warnTarget[chId], resTarget);
 }
 
-void CMoveDetector::maskDetectProcess(OSA_MsgHndl *pMsg)
+void CMoveDetector_mv::maskDetectProcess(OSA_MsgHndl *pMsg)
 {
 		int chId;
 		chId	=	pMsg->cmd ;

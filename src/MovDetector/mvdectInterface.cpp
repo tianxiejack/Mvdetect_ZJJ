@@ -6,7 +6,7 @@ CMvDectInterface *MvDetector_Create()
 {
 	CMvDectInterface	*pMvObj = NULL;
 
-	pMvObj = (CMvDectInterface*)new CMoveDetector;
+	pMvObj = (CMvDectInterface*)new CMoveDetector_mv;
 	CV_Assert(pMvObj != NULL);
 
 	return (CMvDectInterface*)pMvObj;
@@ -14,7 +14,7 @@ CMvDectInterface *MvDetector_Create()
 
 void MvDetector_Destory(CMvDectInterface *obj)
 {
-	CMoveDetector	*pMvObj = (CMoveDetector*)obj;
+	CMoveDetector_mv	*pMvObj = (CMoveDetector_mv*)obj;
 	if(pMvObj != NULL){
 		delete pMvObj;
 		obj = NULL;
