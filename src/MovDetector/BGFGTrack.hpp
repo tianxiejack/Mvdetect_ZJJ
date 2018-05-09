@@ -4,11 +4,11 @@
 #include	"Kalman.h"
 #include	"infoHead.h"
 
-class CBGFGTracker
+class CBGFGTracker_mv
 {
 public:
-	CBGFGTracker();
-	virtual	~CBGFGTracker();
+	CBGFGTracker_mv();
+	virtual	~CBGFGTracker_mv();
 
 	void	InitCBFG(	int x0, int y0, double DeltaT,int DP, int MP, int CP);
 	void	DeInitCBFG();

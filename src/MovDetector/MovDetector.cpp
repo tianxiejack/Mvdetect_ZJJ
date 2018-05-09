@@ -7,7 +7,7 @@
 using namespace cv;
 using namespace std;
 
-CMoveDetector_mv::CMoveDetector_mv()
+CMoveDetector::CMoveDetector()
 {
 	int	i;
 	m_bExit	 = FALSE;
@@ -27,7 +27,7 @@ CMoveDetector_mv::CMoveDetector_mv()
 	m_context = NULL;
 }
 
-CMoveDetector_mv::~CMoveDetector_mv()
+CMoveDetector::~CMoveDetector()
 {
 	destroy();
 }

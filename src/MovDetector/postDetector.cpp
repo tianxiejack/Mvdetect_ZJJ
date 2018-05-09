@@ -4,7 +4,7 @@
 #include "psJudge.h"
 #include "postDetector.hpp"
 
-CPostDetect::CPostDetect():m_pPatterns (NULL),m_ptemp(NULL),m_pBitData (NULL)
+CPostDetect_mv::CPostDetect_mv():m_pPatterns (NULL),m_ptemp(NULL),m_pBitData (NULL)
 {
 	m_dwWidth = 0;
 	m_dwHeight = 0;
@@ -19,13 +19,13 @@ CPostDetect::CPostDetect():m_pPatterns (NULL),m_ptemp(NULL),m_pBitData (NULL)
 	m_warnState	=  WARN_STATE_IDLE;
 }
 
-CPostDetect::~CPostDetect()
+CPostDetect_mv::~CPostDetect_mv()
 {
 	DestroyMD();
 	m_warnRoi.clear();
 }
 
-void CPostDetect::DestroyMD()
+void CPostDetect_mv::DestroyMD()
 {
 	if (m_pPatterns != NULL)
 	{
@@ -49,7 +49,7 @@ void CPostDetect::DestroyMD()
 	m_edgeTargetRec.clear();
 }
 
-BOOL  CPostDetect::InitializedMD(int lWidth, int lHeight, int lStride)
+BOOL  CPostDetect_mv::InitializedMD(int lWidth, int lHeight, int lStride)
 {
 	if (m_dwHeight != lHeight || m_dwWidth != lWidth)
 		DestroyMD();
@@ -102,7 +102,7 @@ m_pPattern[]:每个连通区域的位置
  */
 
 #define BOL		16
-BOOL  CPostDetect::GetMoveDetect(LPBYTE lpBitData,int lWidth, int lHeight, int iStride,  int iscatter/* = 20*/)
+BOOL  CPostDetect_mv::GetMoveDetect(LPBYTE lpBitData,int lWidth, int lHeight, int iStride,  int iscatter/* = 20*/)
 {
 	BOOL iRet = TRUE;
 	iRet = InitializedMD(lWidth, lHeight, iStride);
@@ -294,7 +294,7 @@ BOOL  CPostDetect::GetMoveDetect(LPBYTE lpBitData,int lWidth, int lHeight, int i
 	return iRet;
 }
 
-void CPostDetect::MergeRect(Pattern	ptn[], int num)
+void CPostDetect_mv::MergeRect(Pattern	ptn[], int num)
 {
 	int	i,	j;
 	cv::Rect	rc1,	rc2, roi;
@@ -330,7 +330,7 @@ void CPostDetect::MergeRect(Pattern	ptn[], int num)
 	}
 }
 
-BOOL  CPostDetect::VHDilation(LPBYTE lpBitData, int lWidth, int lHeight, int iStride)
+BOOL  CPostDetect_mv::VHDilation(LPBYTE lpBitData, int lWidth, int lHeight, int iStride)
 {
 	BOOL iRet = TRUE;
 
@@ -348,7 +348,7 @@ BOOL  CPostDetect::VHDilation(LPBYTE lpBitData, int lWidth, int lHeight, int iSt
 	return iRet;
 }
 
-void	CPostDetect::setWarningRoi(std::vector<cv::Point2i>	warnRoi)
+void	CPostDetect_mv::setWarningRoi(std::vector<cv::Point2i>	warnRoi)
 {
 	int	k,	npoint = warnRoi.size();
 	CV_Assert(npoint>2);
@@ -358,7 +358,7 @@ void	CPostDetect::setWarningRoi(std::vector<cv::Point2i>	warnRoi)
 	}
 }
 
-void	CPostDetect::setTrkThred(TRK_THRED		trkThred)
+void	CPostDetect_mv::setTrkThred(TRK_THRED		trkThred)
 {
 	m_bgfgTrack.SetTrkThred(trkThred);
 }
@@ -391,7 +391,7 @@ static void _copyTarget(std::vector<TRK_RECT_INFO> srcTarget, std::vector<TRK_RE
 	ASSERT(curPattern.rightbottom.y < nHeight);	
 
 
-void	CPostDetect::MovTargetDetect(float nScalX /*= 1*/, float nScalY /*= 1*/)
+void	CPostDetect_mv::MovTargetDetect(float nScalX /*= 1*/, float nScalY /*= 1*/)
 {
 	m_movTargetRec.clear();
 
@@ -441,17 +441,17 @@ void	CPostDetect::MovTargetDetect(float nScalX /*= 1*/, float nScalY /*= 1*/)
 	}
 }
 
-void	CPostDetect::MovTargetDraw(cv::Mat	frame)
+void	CPostDetect_mv::MovTargetDraw(cv::Mat	frame)
 {
 	DrawWarnTarget(frame,	m_movTargetRec);
 }
 
-void	CPostDetect::getMoveTarget(std::vector<TRK_RECT_INFO> &moveTarget)
+void	CPostDetect_mv::getMoveTarget(std::vector<TRK_RECT_INFO> &moveTarget)
 {
 	_copyTarget(m_movTargetRec, moveTarget);
 }
 
-void	CPostDetect::edgeTargetDetect(float nScalX /*= 1*/, float nScalY /*= 1*/)
+void	CPostDetect_mv::edgeTargetDetect(float nScalX /*= 1*/, float nScalY /*= 1*/)
 {
 	Pattern curPattern;
 	cv::Point center;
@@ -504,17 +504,17 @@ void	CPostDetect::edgeTargetDetect(float nScalX /*= 1*/, float nScalY /*= 1*/)
 	}
 }
 
-void	CPostDetect::edgeTargetDraw(cv::Mat	frame)
+void	CPostDetect_mv::edgeTargetDraw(cv::Mat	frame)
 {
 	DrawWarnTarget(frame,	m_edgeTargetRec);
 }
 
-void	CPostDetect::getEdgeTarget(std::vector<TRK_RECT_INFO> &edgeTarget)
+void	CPostDetect_mv::getEdgeTarget(std::vector<TRK_RECT_INFO> &edgeTarget)
 {
 	_copyTarget(m_edgeTargetRec, edgeTarget);
 }
 
-void	CPostDetect::warnTargetSelect( float nScalX /*= 1*/, float nScalY /*= 1*/)
+void	CPostDetect_mv::warnTargetSelect( float nScalX /*= 1*/, float nScalY /*= 1*/)
 {
 	m_warnTargetRec.clear();
 
@@ -599,7 +599,7 @@ static void _drawWarnTarget(cv::Mat	frame,	std::vector<TRK_RECT_INFO>	warnTarget
 	}
 }
 
-void	CPostDetect::DrawWarnTarget(cv::Mat	frame,	std::vector<TRK_RECT_INFO>	warnTarget)
+void	CPostDetect_mv::DrawWarnTarget(cv::Mat	frame,	std::vector<TRK_RECT_INFO>	warnTarget)
 {
 	_drawWarnTarget(frame, warnTargetBK, false);
 
@@ -615,27 +615,27 @@ void	CPostDetect::DrawWarnTarget(cv::Mat	frame,	std::vector<TRK_RECT_INFO>	warnT
 	_drawWarnTarget(frame, warnTarget, true);
 }
 
-void	CPostDetect::SetTargetBGFGTrk()
+void	CPostDetect_mv::SetTargetBGFGTrk()
 {
 	m_bgfgTrack.SetTrkTarget(m_warnTargetRec);
 }
 
-void	CPostDetect::WarnTargetBGFGTrk()
+void	CPostDetect_mv::WarnTargetBGFGTrk()
 {
 	m_bgfgTrack.TrackProcess(m_pPatterns,	m_patternnum);
 }
 
-void	CPostDetect::TargetBGFGAnalyse()
+void	CPostDetect_mv::TargetBGFGAnalyse()
 {
 	m_warnState	=	m_bgfgTrack.TrackAnalyse(m_warnRoi);
 }
 
-void	CPostDetect::GetBGFGTarget(std::vector<TRK_RECT_INFO> &lostTarget, std::vector<TRK_RECT_INFO> &invadeTarget, std::vector<TRK_RECT_INFO> &warnTarget)
+void	CPostDetect_mv::GetBGFGTarget(std::vector<TRK_RECT_INFO> &lostTarget, std::vector<TRK_RECT_INFO> &invadeTarget, std::vector<TRK_RECT_INFO> &warnTarget)
 {
 	m_bgfgTrack.GetTrackTarget(lostTarget, invadeTarget, warnTarget);
 }
 
-void	CPostDetect::DrawBGFGTarget(cv::Mat	frame)
+void	CPostDetect_mv::DrawBGFGTarget(cv::Mat	frame)
 {
 	m_bgfgTrack.DrawWarnTarget(frame);
 }

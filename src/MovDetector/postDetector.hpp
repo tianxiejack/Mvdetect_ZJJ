@@ -13,11 +13,11 @@
 using namespace cv;
 using namespace std;
 
-class CPostDetect 
+class CPostDetect_mv 
 {
 public:
-	CPostDetect();
-	virtual ~CPostDetect();
+	CPostDetect_mv();
+	virtual ~CPostDetect_mv();
 	BOOL    	GetMoveDetect(LPBYTE lpBitData,int lWidth, int lHeight, int iStride, int iscatter = 20);
 	BOOL   	VHDilation(LPBYTE lpBitData, int lWidth, int lHeight, int iStride);
 	BOOL   	InitializedMD(int lWidth, int lHeight, int lStride);
@@ -56,7 +56,7 @@ public:
 	int      m_iRelative[SAMPLE_NUMBER];
 	int      m_list[SAMPLE_NUMBER];
 
-	CBGFGTracker		m_bgfgTrack;
+	CBGFGTracker_mv		m_bgfgTrack;
 
 	std::vector<cv::Point2i>				m_warnRoi;
 	std::vector<TRK_RECT_INFO>		m_warnTargetRec;

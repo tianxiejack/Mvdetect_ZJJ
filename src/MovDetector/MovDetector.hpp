@@ -34,11 +34,11 @@ typedef struct _mog2_para_t{
 }MOG2_PARAM;
 
 
-class CMoveDetector_mv	:	public CMvDectInterface
+class CMoveDetector	:	public CMvDectInterface
 {
 public:
-	CMoveDetector_mv();
-	virtual	~CMoveDetector_mv();
+	CMoveDetector();
+	virtual	~CMoveDetector();
 
 public:
 	int		init(LPNOTIFYFUNC	notifyFunc, void *context);
@@ -65,7 +65,7 @@ public:
 	cv::Mat	frame[DETECTOR_NUM];
 	cv::Mat 	fgmask[DETECTOR_NUM];
 	cv::Mat	disframe[DETECTOR_NUM];
-	CPostDetect		m_postDetect[DETECTOR_NUM];
+	CPostDetect_mv		m_postDetect[DETECTOR_NUM];
 
 	OSA_TskHndl m_maskDetectTsk[DETECTOR_NUM];
 	BOOL			m_bExit;

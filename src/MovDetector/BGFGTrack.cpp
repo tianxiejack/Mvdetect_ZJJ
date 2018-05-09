@@ -3,7 +3,7 @@
 #include "BGFGTrack.hpp"
 #include	"psJudge.h"
 
-CBGFGTracker::CBGFGTracker()
+CBGFGTracker_mv::CBGFGTracker_mv()
 {
 	m_pKalmanProc = NULL;
 	m_bInited	=FALSE;
@@ -19,12 +19,12 @@ CBGFGTracker::CBGFGTracker()
 	m_thredParam.distRoi = 2.0;
 }
 
-CBGFGTracker::~CBGFGTracker()
+CBGFGTracker_mv::~CBGFGTracker_mv()
 {
 	DeInitCBFG();
 }
 
-void	CBGFGTracker::InitCBFG(	int x0, int y0, double DeltaT,int DP, int MP, int CP)
+void	CBGFGTracker_mv::InitCBFG(	int x0, int y0, double DeltaT,int DP, int MP, int CP)
 {
 	if (m_bInited){
 		DeInitCBFG();
@@ -56,7 +56,7 @@ void	CBGFGTracker::InitCBFG(	int x0, int y0, double DeltaT,int DP, int MP, int C
 	m_bInited = TRUE;
 }
 
-void	CBGFGTracker::DeInitCBFG()
+void	CBGFGTracker_mv::DeInitCBFG()
 {
 	if (m_pKalmanProc != NULL)
 	{
@@ -76,7 +76,7 @@ void	CBGFGTracker::DeInitCBFG()
 	m_bInited = FALSE;
 }
 
-void CBGFGTracker::KalmanPredict(int xout, int yout)
+void CBGFGTracker_mv::KalmanPredict(int xout, int yout)
 {
 	/* Kalman滤波：更新yk，进行滤波，得到新的xk估计（k时刻）*/
 	m_pMeasure[0] = (double)xout;
@@ -84,18 +84,18 @@ void CBGFGTracker::KalmanPredict(int xout, int yout)
 	Kalman(m_pMeasure,	NULL);/* 进行Kalman滤波*/
 }
 
-void CBGFGTracker::Kalman(double *measure, double *control)
+void CBGFGTracker_mv::Kalman(double *measure, double *control)
 {
 	m_pKalmanProc->KalmanPredict(control);
 	m_pKalmanProc->KalmanCorrect(measure);
 }
 
-void	CBGFGTracker::SetTrkThred(TRK_THRED	 trkThred)
+void	CBGFGTracker_mv::SetTrkThred(TRK_THRED	 trkThred)
 {
 	memcpy(&m_thredParam, &trkThred, sizeof(TRK_THRED));
 }
 
-void	CBGFGTracker::SetTrkTarget(std::vector<TRK_RECT_INFO>	warnTarget)
+void	CBGFGTracker_mv::SetTrkTarget(std::vector<TRK_RECT_INFO>	warnTarget)
 {
 	int	i,	j,	k;
 	int		nTargetNum	=	warnTarget.size();
@@ -176,7 +176,7 @@ static	void	_trackprocess(Pattern  *curPatterns,	 int	numPatterns,	TRK_RECT_INFO
 	}
 }
 
-void	CBGFGTracker::TrackProcess(Pattern  *curPatterns,	 int	numPatterns)
+void	CBGFGTracker_mv::TrackProcess(Pattern  *curPatterns,	 int	numPatterns)
 {
 	int	i,	k;
 	TRK_RECT_INFO	*pTrkInfo;
@@ -200,7 +200,7 @@ void	CBGFGTracker::TrackProcess(Pattern  *curPatterns,	 int	numPatterns)
 	}
 }
 
-void	CBGFGTracker::ClearTrkTarget(int	Idx)
+void	CBGFGTracker_mv::ClearTrkTarget(int	Idx)
 {
 	TRK_RECT_INFO	*pTrkInfo  = &m_warnTarget[Idx];
 	pTrkInfo->trkState	= TRK_STATE_IDLE;
@@ -209,7 +209,7 @@ void	CBGFGTracker::ClearTrkTarget(int	Idx)
 	pTrkInfo->disp_frames	= 0;
 }
 
-int	CBGFGTracker::TrackAnalyse(std::vector<cv::Point2i>		warnRoi)
+int	CBGFGTracker_mv::TrackAnalyse(std::vector<cv::Point2i>		warnRoi)
 {
 	int	i,	k;
 	int	dispFrames, totalFrames;
@@ -282,7 +282,7 @@ int	CBGFGTracker::TrackAnalyse(std::vector<cv::Point2i>		warnRoi)
 	return warnState;
 }
 
-void	CBGFGTracker::GetTrackTarget(std::vector<TRK_RECT_INFO> &lostTarget, std::vector<TRK_RECT_INFO> &invadeTarget, std::vector<TRK_RECT_INFO> &warnTarget)
+void	CBGFGTracker_mv::GetTrackTarget(std::vector<TRK_RECT_INFO> &lostTarget, std::vector<TRK_RECT_INFO> &invadeTarget, std::vector<TRK_RECT_INFO> &warnTarget)
 {
 	lostTarget.clear();
 	invadeTarget.clear();
@@ -337,7 +337,7 @@ static void _drawWarn(cv::Mat frame, TRK_RECT_INFO *warnTarget, bool bshow)
 	}
 }
 
-void	CBGFGTracker::DrawWarnTarget(cv::Mat	frame)
+void	CBGFGTracker_mv::DrawWarnTarget(cv::Mat	frame)
 {
 	_drawWarn(frame, m_warnTargetBK, false);
 	_drawWarn(frame, m_warnTarget, true);
